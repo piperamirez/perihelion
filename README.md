@@ -22,6 +22,7 @@ All planet parameters, such as radius and orbit inclination angles simulate the 
 'x' : move down
 'n' : display planet labels
 'k' : display orbits
+'m' : toggle meteor shower
 'o' : makes time go faster
 'l' : makes time go slower
 'f' : toggle fullscreen mode
