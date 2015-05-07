@@ -29,7 +29,7 @@ GLfloat light1_position[] = {-2.000,  2.000,  1.000,  1.000};
 
 long int t = 0;
 float acceleration = 1.0;
-float a = 100;
+float a = -30;
 int i;
 
 int stars[2000][8][3];
@@ -37,6 +37,7 @@ int stars[2000][8][3];
 int fullscreen = 0;
 int drawOrbits = 0;
 int drawLabels = 0;
+int drawMeteorsOn = 0;
 
 int keys[128];
 int mouseX, mouseY;
@@ -44,6 +45,7 @@ int mouseX, mouseY;
 void drawScene(void);
 void drawStars();
 void drawOrbit(int, int);
+void drawMeteors();
 void drawString(float, float, float, char*);
 void loadStars();
 void exitFullScreen(void);
@@ -239,8 +241,11 @@ void drawScene(void) {
 	
 	//Sorry Pluto, you're not a planet anymore :(
 	
-	if (a < -1000) {
-		a = 100;
+	// Meteors
+	drawMeteors();
+
+	if (a < -500) {
+		a = -20;
 	}
 		
 	glutSwapBuffers();
@@ -276,6 +281,24 @@ void drawStars() {
 	glEnd();
 }
 
+void drawMeteors() {
+	srand(time(NULL));
+  if(drawMeteorsOn){
+      for(i=0;i<10;i++){
+          glPushMatrix();
+              glColor3f(1.0,1,1);
+              glTranslatef(a+40*i+50,a+30*i+50,a+50*i+50);
+              glBegin(GL_LINES);
+                  glVertex3f(0.0, 0.0, 0.0);
+                  glVertex3f(-a/6, -a/6, -a/6);
+              glEnd();
+              glutSolidSphere(0.5,30,30);
+          glPopMatrix();
+          a-=0.05;
+      }
+  }
+}
+
 void exitFullScreen(void) {
 	glutReshapeWindow(WIDTH, HEIGHT);
 	glutPositionWindow(
@@ -308,6 +331,9 @@ void keyDown(unsigned char key, int x, int y) {
 		case 'n':
 			drawLabels = !drawLabels;
 			break;
+		case 'm':
+      drawMeteorsOn = !drawMeteorsOn;
+      break;
 		case 'f':
 			fullscreen = !fullscreen;
 			if (fullscreen) {
