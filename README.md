@@ -6,6 +6,10 @@ Perihelion is a simulator of the solar system. It was developed as a small proje
 
 All planet parameters, such as radius and orbit inclination angles simulate the real ones. Of course, distance between planets relative to their sizes is not real. Data points for stars were randomly generated.
 
+## Screenshot
+
+![alt tag](https://raw.githubusercontent.com/piperamirez/perihelion/master/doc/screenshot.png)
+
 ## Authors
 
 * Felipe Ramirez
