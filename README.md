@@ -8,7 +8,7 @@ All planet parameters, such as radius and orbit inclination angles simulate the 
 
 ## Screenshot
 
-![alt tag](https://raw.githubusercontent.com/piperamirez/perihelion/master/doc/screenshot.png)
+![alt tag](https://raw.githubusercontent.com/piperamirez/perihelion/master/doc/perihelion-screenshot.png.png)
 
 ## Authors
 
