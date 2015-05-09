@@ -22,14 +22,14 @@ GLfloat position[]        = { 0.000,  3.000,  0.000,  1.000};
 GLfloat spot_direction[]  = {-1.000, -1.000,  0.000};
 GLfloat direction[]       = { 0.000, -1.000,  0.000};
 
-GLfloat light1_ambient[]  = { 0.200,  0.200,  0.200,  1.000}; 
-GLfloat light1_diffuse[]  = { 0.851,  0.644,  0.125,  1.000}; 
-GLfloat light1_specular[] = { 1.000,  1.000,  1.000,  1.000}; 
-GLfloat light1_position[] = {-2.000,  2.000,  1.000,  1.000}; 
+GLfloat light1_ambient[]  = { 0.200,  0.200,  0.200,  1.000};
+GLfloat light1_diffuse[]  = { 0.851,  0.644,  0.125,  1.000};
+GLfloat light1_specular[] = { 1.000,  1.000,  1.000,  1.000};
+GLfloat light1_position[] = {-2.000,  2.000,  1.000,  1.000};
 
 long int t = 0;
 float acceleration = 1.0;
-float a = 100;
+float a = -30;
 int i;
 
 int stars[2000][8][3];
@@ -37,6 +37,7 @@ int stars[2000][8][3];
 int fullscreen = 0;
 int drawOrbits = 0;
 int drawLabels = 0;
+int drawMeteorsOn = 0;
 
 int keys[128];
 int mouseX, mouseY;
@@ -44,6 +45,7 @@ int mouseX, mouseY;
 void drawScene(void);
 void drawStars();
 void drawOrbit(int, int);
+void drawMeteors();
 void drawString(float, float, float, char*);
 void loadStars();
 void exitFullScreen(void);
@@ -58,7 +60,7 @@ int main(int argc, char *argv[]) {
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(WIDTH,HEIGHT);
 	glutInitWindowPosition(
-		(glutGet(GLUT_SCREEN_WIDTH)-WIDTH)/2, 
+		(glutGet(GLUT_SCREEN_WIDTH)-WIDTH)/2,
 		(glutGet(GLUT_SCREEN_HEIGHT)-HEIGHT)/2);
     glutCreateWindow("Perihelion");
     glutDisplayFunc(drawScene);
@@ -78,14 +80,14 @@ void drawScene(void) {
 	glLoadIdentity();
 	gluLookAt(camera.x, camera.y, camera.z, 0, 0, 0, 0, 1, 0);
 	glMatrixMode(GL_MODELVIEW);
-	
+
 	drawStars();
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light1_ambient); 
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light1_specular); 
-		
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light1_ambient);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light1_specular);
+
 	// Draw the sun
-	glLightfv(GL_LIGHT0, GL_POSITION, spotPos); 
+	glLightfv(GL_LIGHT0, GL_POSITION, spotPos);
 	glDisable(GL_LIGHTING);
 	glPushMatrix();
 		glColor3f(1, 1, 0.2);
@@ -93,11 +95,11 @@ void drawScene(void) {
 		glutSolidSphere(2, 30, 30);
 	glPopMatrix();
 	glEnable(GL_LIGHTING);
-	
+
 	// Draw Mercury
 	glColor3f(0.8, 0.4, 0.0);
 	drawOrbit(3, 7);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(3, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(0.8, 0.4, 0.0);
@@ -107,11 +109,11 @@ void drawScene(void) {
 			glutSolidSphere(0.3, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw Venus
 	glColor3f(0.28, 0.46, 1.0);
 	drawOrbit(9, 10);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(9,1, 0, 0);
 		glPushMatrix();
 			glColor3f(0.28, 0.46, 1.0);
@@ -121,11 +123,11 @@ void drawScene(void) {
 			glutSolidSphere(0.7, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw The Earth
 	glColor3f(0.15, 0.25, 0.54);
 	drawOrbit(8, 13);
-		glPushMatrix();		
+		glPushMatrix();
 		glRotatef(8, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(0.15, 0.25, 0.54);
@@ -135,11 +137,11 @@ void drawScene(void) {
 			glutSolidSphere(0.7, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw Mars
 	glColor3f(1, 0.0, 0.0);
 	drawOrbit(5, 16);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(5, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(1, 0.0, 0.0);
@@ -149,11 +151,11 @@ void drawScene(void) {
 			glutSolidSphere(0.6, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw Jupiter
 	glColor3f(0.8, 0.58, 0.047);
 	drawOrbit(8, 24);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(8, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(0.8, 0.58, 0.047);
@@ -163,11 +165,11 @@ void drawScene(void) {
 			glutSolidSphere(1.2, RES_PLANET,RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw Saturn
 	glColor3f(0.8, 0.58, 0.047);
 	drawOrbit(5, 30);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(5, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(0.6, 0.4, 0.030);
@@ -185,11 +187,11 @@ void drawScene(void) {
 			glutSolidSphere(1, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw Uranus
 	glColor3f(0, 0.1, 1);
 	drawOrbit(7, 40);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(7, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(0, 0.1, 1);
@@ -207,11 +209,11 @@ void drawScene(void) {
 			glutSolidSphere(0.7, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Draw Neptune
 	glColor3f(0.0, 0.89, 0.93);
 	drawOrbit(8, 48);
-	glPushMatrix();		
+	glPushMatrix();
 		glRotatef(8, 1, 0, 0);
 		glPushMatrix();
 			glColor3f(0.0, 0.89, 0.93);
@@ -221,7 +223,7 @@ void drawScene(void) {
 			glutSolidSphere(0.7, RES_PLANET, RES_PLANET);
 		glPopMatrix();
 	glPopMatrix();
-	
+
 	// Almost forgot, let's draw the Moon!
 	glPushMatrix();
 		glRotatef(8,1,0,0);
@@ -236,15 +238,18 @@ void drawScene(void) {
 			glPopMatrix();
    		glPopMatrix();
 	glPopMatrix();
-	
+
 	//Sorry Pluto, you're not a planet anymore :(
-	
-	if (a < -1000) {
-		a = 100;
+
+	// Meteors
+	drawMeteors();
+
+	if (a < -500) {
+		a = -20;
 	}
-		
+
 	glutSwapBuffers();
-	
+
 }
 
 void loadStars() {
@@ -268,18 +273,36 @@ void drawStars() {
 	for (i = 0; i < 1000; i++) {
 		for (j = 0; j < 8; j++) {
 			glVertex3f(
-				stars[i][j][0], 
-				stars[i][j][1], 
+				stars[i][j][0],
+				stars[i][j][1],
 				stars[i][j][2]);
 		}
 	}
 	glEnd();
 }
 
+void drawMeteors() {
+	srand(time(NULL));
+  if(drawMeteorsOn){
+      for(i=0;i<10;i++){
+          glPushMatrix();
+              glColor3f(1.0,1,1);
+              glTranslatef(a+40*i+50,a+30*i+50,a+50*i+50);
+              glBegin(GL_LINES);
+                  glVertex3f(0.0, 0.0, 0.0);
+                  glVertex3f(-a/6, -a/6, -a/6);
+              glEnd();
+              glutSolidSphere(0.5,30,30);
+          glPopMatrix();
+          a-=0.05;
+      }
+  }
+}
+
 void exitFullScreen(void) {
 	glutReshapeWindow(WIDTH, HEIGHT);
 	glutPositionWindow(
-		(glutGet(GLUT_SCREEN_WIDTH)-WIDTH)/2, 
+		(glutGet(GLUT_SCREEN_WIDTH)-WIDTH)/2,
 		(glutGet(GLUT_SCREEN_HEIGHT)-HEIGHT)/2);
 }
 
@@ -308,6 +331,9 @@ void keyDown(unsigned char key, int x, int y) {
 		case 'n':
 			drawLabels = !drawLabels;
 			break;
+		case 'm':
+      drawMeteorsOn = !drawMeteorsOn;
+      break;
 		case 'f':
 			fullscreen = !fullscreen;
 			if (fullscreen) {
@@ -336,7 +362,7 @@ void keyUp(unsigned char key, int x, int y) {
 
 void drawOrbit(int angle, int radio) {
 	if (drawOrbits) {
-		glPushMatrix();		
+		glPushMatrix();
 			glRotatef(angle, 1, 0, 0);
 			glPushMatrix();
 				glRotatef(90, 1, 0, 0);
